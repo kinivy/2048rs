@@ -1,5 +1,7 @@
+use crossterm::event::{Event, KeyCode};
 use ratatui::{DefaultTerminal, Frame};
 use crate::game::GameState;
+use::crossterm::event;
 
 mod display;
 mod game;
@@ -11,16 +13,20 @@ fn main() -> color_eyre::Result<()>{
 }
 
 fn app(terminal: &mut DefaultTerminal) -> std::io::Result<()> {
+    let mut state: GameState = GameState::new();
     loop {
-        terminal.draw(render)?;
-        if crossterm::event::read()?.is_key_press() {
-            break Ok(());
+        terminal.draw(|f| render(&state, f))?;
+        if let Event::Key(key) = event::read()? {
+            if key.code == KeyCode::Right {
+                state.shift_right(); 
+            } else {
+                break Ok(());
+            }
         }
     }
 }
 
 
-fn render(frame: &mut Frame) {
-    let state: GameState = GameState::new();
-    frame.render_widget(state, frame.area());
+fn render(state: &GameState, frame: &mut Frame) {
+    frame.render_widget(state.clone(), frame.area());
 }
