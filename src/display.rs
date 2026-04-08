@@ -1,5 +1,6 @@
 use ratatui::layout::{Constraint, Rect};
 use ratatui::{buffer::Buffer, layout::Layout, widgets::{Block, Paragraph, Widget}};
+use ratatui::style::{Color, Style};
 use crate::game::GameState;
 
 impl Widget for GameState {
@@ -14,11 +15,35 @@ impl Widget for GameState {
         let cells = rows.iter().flat_map(|&row| horizontal.split(row).to_vec());
 
         for (i, cell) in cells.enumerate() {
-            Paragraph::new(format!("{}", self.board[i/4][i%4]))
+            let value = self.board[i/4][i%4];
+            Paragraph::new(get_display_value(&value).to_string())
                 .block(Block::bordered())
                 .centered()
+                .style(
+                    Style::new()
+                    .bg(get_color(&value)),
+                )
                 .render(cell, buf);
         }
     }
 }
 
+fn get_display_value(value:&u32) -> String {
+   if *value == 0 {
+       "".to_string()
+   } else {
+       value.to_string()
+   }
+}
+
+
+fn get_color(value:&u32) -> Color {
+    match *value {
+        2 => Color::Yellow,
+        4 => Color::Red,
+        8 => Color::Blue,
+        16 => Color::Magenta,
+        32 => Color::Cyan,
+        _ => Color::Reset
+    }
+}
