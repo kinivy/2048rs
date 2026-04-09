@@ -10,24 +10,39 @@ impl GameState {
         GameState { board: init_board(), score: 0}
     }
 
+    pub fn shift_left(&mut self) {
+       for i in 0..4 {
+           let mut row = self.board[i];
+           for j in 0..4 {
+               for k in j+1..4 {
+                   if row[k] != 0 {
+                       if row[j] == row[k] {
+                           row[j] *= 2;
+                           row[k] = 0;
+                       } else if row[j] == 0 {
+                           row[j] = row[k];
+                           row[k] = 0;
+                       }
+                   }
+               }
+           }
+           self.board[i] = row;
+       } 
+    }
+
     pub fn shift_right(&mut self) {
        for i in 0..4 {
            let mut row = self.board[i];
-           // Combining rightmost pair
-           for j in (1..=3).rev() { 
-               if row[j-1] == row[j] {
-                   row[j] *= 2;
-                   row[j-1] = 0;
-               }
-           }
-           //Shifting all to right
-           for j in (1..=3).rev() {
-               if row[j] == 0 {
-                   for k in (0..j).rev() {
-                       if row[k] != 0 {
+           for j in (0..4).rev() {
+               for k in (0..j).rev() {
+                   if row[k] != 0 {
+                       if row[j] == row[k] {
+                           row[j] *= 2;
+                           row[k] = 0;
+                       } else if row[j] == 0 {
                            row[j] = row[k];
                            row[k] = 0;
-                       } 
+                       }
                    }
                }
            }

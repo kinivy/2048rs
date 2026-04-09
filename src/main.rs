@@ -17,10 +17,10 @@ fn app(terminal: &mut DefaultTerminal) -> std::io::Result<()> {
     loop {
         terminal.draw(|f| render(&state, f))?;
         if let Event::Key(key) = event::read()? {
-            if key.code == KeyCode::Right {
-                state.shift_right(); 
-            } else {
-                break Ok(());
+            match key.code {
+                KeyCode::Right => state.shift_right(),
+                KeyCode::Left => state.shift_left(),
+                _ => break Ok(()),
             }
         }
     }
