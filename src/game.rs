@@ -49,6 +49,11 @@ impl GameState {
            self.board[i] = row;
        } 
     }
+
+    pub fn add_tile(&mut self) {
+        let (row, col) = get_random_tile(&self.board);
+        self.board[row][col] = new_tile_value();
+    }
 }
 
 impl Clone for GameState {
@@ -61,7 +66,7 @@ fn init_board() -> [[u32; 4]; 4] {
     let mut board: [[u32; 4]; 4] = [[0; 4]; 4];
     for _ in 0..2 {
         let (row, col) = get_random_tile(&board);
-        board[row][col] = if rand::random_range(0..100) < 90 { 2 } else { 4 };
+        board[row][col] = new_tile_value();
     }
     board
 }
@@ -76,3 +81,7 @@ fn get_random_tile(board: &[[u32; 4]; 4]) -> (usize, usize) {
         (row, col)
     }
 } 
+
+fn new_tile_value() -> u32 {
+    if rand::random_range(0..100) < 90 { 2 } else { 4 }
+}
