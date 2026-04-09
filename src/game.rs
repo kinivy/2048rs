@@ -10,7 +10,8 @@ impl GameState {
         GameState { board: init_board(), score: 0}
     }
 
-    pub fn shift_left(&mut self) {
+    pub fn shift_left(&mut self) -> bool {
+       let mut is_valid = false;
        for i in 0..4 {
            let mut row = self.board[i];
            for j in 0..4 {
@@ -19,18 +20,22 @@ impl GameState {
                        if row[j] == row[k] {
                            row[j] *= 2;
                            row[k] = 0;
+                           is_valid = true;
                        } else if row[j] == 0 {
                            row[j] = row[k];
                            row[k] = 0;
+                           is_valid = true;
                        }
                    }
                }
            }
            self.board[i] = row;
        } 
+       is_valid
     }
 
-    pub fn shift_right(&mut self) {
+    pub fn shift_right(&mut self) -> bool {
+       let mut is_valid = false;
        for i in 0..4 {
            let mut row = self.board[i];
            for j in (0..4).rev() {
@@ -39,15 +44,18 @@ impl GameState {
                        if row[j] == row[k] {
                            row[j] *= 2;
                            row[k] = 0;
+                           is_valid = true;
                        } else if row[j] == 0 {
                            row[j] = row[k];
                            row[k] = 0;
+                           is_valid = true;
                        }
                    }
                }
            }
            self.board[i] = row;
        } 
+       is_valid
     }
 
     pub fn add_tile(&mut self) {
